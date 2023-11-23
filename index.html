@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Range slider</title>
+   <link rel="stylesheet" href="main.css">
+</head>
+<body>
+   <div class="container">
+      <div class="sliderValue">
+         <input id="inputMin" value="100 ₽" pattern="d ₽" class="sliderTitle">
+         <input id="inputMax" value="900 ₽" pattern="d ₽" class="sliderTitle">
+      </div>
+      <div class="doubleSlider">
+         <div class="doubleBody">
+            <div class="doubleTrack">
+               <div id="sliderRange" class="doubleRange"></div>
+               <div id="dotLeft" class="doublDot doubleDotLeft"></div>
+               <div id="dotRight" class="doublDot doubleDotRight"></div>
+            </div>
+            <input id="inputLeft" class="doubleInput" type="range" value="100" min="0" max="1000">
+            <input id="inputRight" class="doubleInput" type="range" value="900" min="0" max="1000">
+         </div>
+      </div>
+   </div>
+   <script>
+      const inputMin = document.getElementById('inputMin');
+      const inputMax = document.getElementById('inputMax');
+
+      const inputLeft = document.getElementById('inputLeft');
+      const inputRight = document.getElementById('inputRight');
+
+      const dotLeft = document.getElementById('dotLeft');
+      const dotRight = document.getElementById('dotRight');
+
+      const sliderRange = document.getElementById('sliderRange');
+
+      function setLeftValue()
+      {
+         let value = this.value;
+         let min = parseInt(this.min);
+         let max = parseInt(this.max);
+
+         value = Math.min(parseInt(value), parseInt(inputRight.value) - 1);
+
+         let percent = ((value - min) / (max - min)) * 100;
+
+         sliderRange.style.left = percent + '%';
+         dotLeft.style.left = percent + '%';
+         inputMin.value = value + ' ₽';
+      }
+   
+      function setRightValue()
+      {
+         let value = this.value;
+         let min = parseInt(this.min);
+         let max = parseInt(this.max);
+
+         value = Math.max(parseInt(value), parseInt(inputLeft.value) + 1);
+
+         let percent = ((value - min) / (max - min)) * 100;
+
+         sliderRange.style.right = (100 - percent) + '%';
+         dotRight.style.right = (100 - percent) + '%';
+         inputMax.value = value + ' ₽';
+      }
+      
+
+         inputLeft.addEventListener('input', setLeftValue);
+         inputRight.addEventListener('input', setRightValue);
+
+      function changeLeftValue()
+      {
+         let value = parseInt(this.value);
+         let min = parseInt(inputLeft.min);
+         let max = parseInt(inputLeft.max);
+
+         value = Math.min(parseInt(value), parseInt(inputRight.value) - 1);
+
+         value = Math.max(value, min);
+
+         let percent = ((value - min) / (max - min)) * 100;
+
+         sliderRange.style.left = percent + '%';
+         dotLeft.style.left = percent + '%';
+         const formattedValue = isNaN(value) ? 0 : value;
+         this.value = formattedValue + ' ₽';
+      }  
+      
+      function changeRightValue()
+      {
+         let value = parseInt(this.value);
+         let min = parseInt(inputRight.min);
+         let max = parseInt(inputRight.max);
+
+         value = Math.max(parseInt(value), parseInt(inputLeft.value) + 1);
+
+         value = Math.min(value, max);
+
+         let percent = ((value - min) / (max - min)) * 100;
+
+         sliderRange.style.right = percent + '%';
+         dotRight.style.right = percent + '%';
+         const formattedValue = isNaN(value) ? 0 : value;
+         this.value = formattedValue + ' ₽';
+      }  
+
+         inputMin.addEventListener('input', changeLeftValue);
+         inputMax.addEventListener('input', changeRightValue);
+      
+   </script>
+</body>
+</html>
